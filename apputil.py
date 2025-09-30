@@ -1,5 +1,8 @@
 import plotly.express as px
+
 import pandas as pd
+
+df = pd.read_csv('https://raw.githubusercontent.com/leontoddjohnson/datasets/main/data/titanic.csv')
 
 # update/add code below ...
 
