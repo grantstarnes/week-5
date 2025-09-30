@@ -5,12 +5,14 @@ from apputil import *
 # Load Titanic dataset
 df = pd.read_csv('https://raw.githubusercontent.com/leontoddjohnson/datasets/main/data/titanic.csv')
 
-st.write(
+st.write("Did first class passengers have a higher survival rate than second and third class passengers overall?")
+
 '''
+
 # Titanic Visualization 1
 
 '''
-)
+
 # Generate and display the figure
 fig1 = visualize_demographic()
 st.plotly_chart(fig1, use_container_width=True)
