@@ -64,3 +64,28 @@ def visualize_demographic():
     fig.update_yaxes(tickformat=".0%", title="Survival Rate")
 
     return fig
+
+# Exercise 2: Family Size and Wealth - Family Groups
+
+def family_groups():
+    # Create a new column for family size
+    df["family_size"] = df["SibSp"] + df["Parch"] + 1  # +1 to include the passenger themselves
+
+    # Compute survival rate by family size
+    grouped = (
+        df.groupby(["Pclass", "family_size"])
+        .agg(
+            n_passengers = ("PassengerId", "size"),
+            avg_fare = ("Fare", "mean"),
+            min_fare = ("Fare", "min"),
+            max_fare = ("Fare", "max")
+        )
+        .reset_index()
+    )
+
+    grouped = grouped.sort_values(["Pclass", "family_size"]).reset_index(drop=True)
+
+    return grouped
+
+# Exercise 2: Family Size and Wealth - Last Names
+
