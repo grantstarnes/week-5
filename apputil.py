@@ -12,7 +12,7 @@ def survival_demographics():
     bins = [0,12,19,59,float('inf')]
     labels = ['Child', 'Teen', 'Adult', 'Senior']
     
-    df["age_group"] = pd.cut(
+    df["AgeCategory"] = pd.cut(
         df["Age"],
         bins=bins,
         labels=labels,
@@ -20,7 +20,7 @@ def survival_demographics():
     )
 
     grouped = (
-        df.groupby(["pclass", "Sex", "AgeCategory"])
+        df.groupby(["Pclass", "Sex", "AgeCategory"])
         .agg(
             n_passengers = ("Survived", "size"),
             n_survivors = ("Survived", "sum"),
@@ -29,10 +29,10 @@ def survival_demographics():
         .reset_index()
     )
 
-    age_order = pd.CategoricalDtype(categories=labels, ordered=True)
-    grouped["age_group"] = grouped["age_group"].astype(age_order)
+    age_group = pd.CategoricalDtype(categories=labels, ordered=True)
+    grouped["AgeCategory"] = grouped["AgeCategory"].astype(age_group)
 
-    grouped = grouped.sort_values(by=["pclass", "Sex", "age_group"]).reset_index(drop=True)
+    grouped = grouped.sort_values(by=["Pclass", "Sex", "AgeCategory"]).reset_index(drop=True)
 
     return grouped
 
