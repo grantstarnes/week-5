@@ -89,3 +89,39 @@ def family_groups():
 
 # Exercise 2: Family Size and Wealth - Last Names
 
+def last_names():
+    df["LastName"] = df["Name"].str.split(",").str[0]
+
+    last_name_count = df["LastName"].value_counts()
+
+    return last_name_count
+
+# Exercise 2: Family Size and Wealth - Visualization
+
+def visualize_families():
+    # Get the grouped data
+    grouped = family_groups()  # calls your existing function
+
+    # Create line chart
+    fig = px.line(
+        grouped,
+        x="family_size",
+        y="avg_fare",
+        color="Pclass",
+        markers=True,  # show points on the line
+        hover_data=["n_passengers", "min_fare", "max_fare"],
+        title="Average Fare vs Family Size by Passenger Class",
+        labels={
+            "family_size": "Family Size",
+            "avg_fare": "Average Fare",
+            "Pclass": "Passenger Class"
+        }
+    )
+
+    fig.update_layout(
+        xaxis=dict(dtick=1),  # show each family size as a tick
+        yaxis=dict(title="Average Fare ($)"),
+        legend_title="Passenger Class"
+    )
+
+    return fig

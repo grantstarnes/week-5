@@ -24,6 +24,8 @@ st.write("The result from the last_names function does not agree with that of th
 
 '''
 # Titanic Visualization 2
+
+Question the Visualization is based on: Does ticket price increase with family size across all classes (first, second, and third)?
 '''
 # Generate and display the figure
 fig2 = visualize_families()
