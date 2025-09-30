@@ -1,14 +1,19 @@
+# importing plotly express and pandas
 import plotly.express as px
 
 import pandas as pd
 
+# Load Titanic dataset
 df = pd.read_csv('https://raw.githubusercontent.com/leontoddjohnson/datasets/main/data/titanic.csv')
-
-# update/add code below ...
 
 # Exercise 1: Survival Patterns
 
 def survival_demographics():
+    '''
+    First, we create bins and labels for age categories. Then, we use pd.cut to categorize ages into these bins. Next, we group the DataFrame by passenger
+    class (Pclass), sex (Sex), and age category (AgeCategory) to compute survival statistics, such as the number of passengers, number of survivors, and
+    survival rate. Finally, we return the grouped DataFrame sorted by Pclass, Sex, and AgeCategory.
+    '''
     bins = [0,12,19,59,float('inf')]
     labels = ['Child', 'Teen', 'Adult', 'Senior']
     
@@ -39,7 +44,12 @@ def survival_demographics():
 # Exercise 1: Survival Patterns - Visualization (Bar Chart)
 
 def visualize_demographic():
-    # Compute survival rate by passenger class
+    '''
+    This function simply creates a bar chart to visualize survival rates by passenger class using plotly. It groups the data by passenger class and
+    calculates the survival rate for each class, and then creates a bar chart with appropriate labels and formatting. The x-axis represents passenger class,
+    and the y-axis represents the survival rate.
+    '''
+    
     grouped = (
         df.groupby("Pclass")["Survived"]
         .agg(["mean", "count"])
@@ -47,7 +57,7 @@ def visualize_demographic():
         .rename(columns={"mean": "survival_rate", "count": "n_passengers"})
     )
 
-    # Create bar chart
+    
     fig = px.bar(
         grouped,
         x="Pclass",
@@ -59,7 +69,7 @@ def visualize_demographic():
         labels={"Pclass": "Passenger Class", "survival_rate": "Survival Rate"}
     )
 
-    # Format survival rate as percentage on hover/text
+    
     fig.update_traces(
         texttemplate="%{y:.1%}",
         textposition="outside"
@@ -71,10 +81,16 @@ def visualize_demographic():
 # Exercise 2: Family Size and Wealth - Family Groups
 
 def family_groups():
-    # Create a new column for family size
-    df["family_size"] = df["SibSp"] + df["Parch"] + 1  # +1 to include the passenger themselves
+    '''
+    This function calculates family sizes and their associated ticket prices. It creates a new column "family_size" by summing the number of 
+    siblings/spouses (SibSp) and parents/children (Parch) for each passenger, adding one to include the passenger themselves. Then, it groups 
+    the DataFrame by passenger class (Pclass) and family size (family_size) to compute statistics such as the number of passengers, average fare, 
+    minimum fare, and maximum fare. Finally, it returns the grouped DataFrame sorted by Pclass and family size.
+    '''
+    
+    df["family_size"] = df["SibSp"] + df["Parch"] + 1 
 
-    # Compute survival rate by family size
+    
     grouped = (
         df.groupby(["Pclass", "family_size"])
         .agg(
@@ -93,6 +109,12 @@ def family_groups():
 # Exercise 2: Family Size and Wealth - Last Names
 
 def last_names():
+    '''
+    This function extracts last names from the "Name" column and counts the number of occurrences per last name.
+    It creates a new column, "LastName", by splitting the "Name" string at the comma and taking the first part, the last name [0 index].
+    Then, it uses the value_counts() method to count how many times each last name appears in the dataset.
+    Finally, it returns a Series with last names as the index and their counts as values.
+    '''
     df["LastName"] = df["Name"].str.split(",").str[0]
 
     last_name_count = df["LastName"].value_counts()
@@ -102,16 +124,21 @@ def last_names():
 # Exercise 2: Family Size and Wealth - Visualization
 
 def visualize_families():
-    # Get the grouped data
-    grouped = family_groups()  # calls your existing function
+    '''
+    This function creates a line chart to visualize the relationship between family size and average ticket fare, segmented by passenger class.
+    It first calls the family_groups function to get the grouped DataFrame containing family sizes and their associated ticket prices.
+    Then, it uses plotly to create a line chart with family size on the x-axis and average fare on the y-axis, with different lines for each
+    passenger class (Pclass).
+    '''
+    grouped = family_groups()
 
-    # Create line chart
+    
     fig = px.line(
         grouped,
         x="family_size",
         y="avg_fare",
         color="Pclass",
-        markers=True,  # show points on the line
+        markers=True,  
         hover_data=["n_passengers", "min_fare", "max_fare"],
         title="Average Fare vs Family Size by Passenger Class",
         labels={
@@ -122,7 +149,7 @@ def visualize_families():
     )
 
     fig.update_layout(
-        xaxis=dict(dtick=1),  # show each family size as a tick
+        xaxis=dict(dtick=1),  
         yaxis=dict(title="Average Fare ($)"),
         legend_title="Passenger Class"
     )
